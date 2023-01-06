@@ -1,0 +1,35 @@
+class Solution:
+    def buildAdjacencyList(self, n, edgesList):
+        adjList = [[] for _ in range(n)]
+        # c2 (course 2) is a prerequisite of c1 (course 1)
+        # i.e c2c1 is a directed edge in the graph
+        for c1, c2 in edgesList:
+            adjList[c2].append(c1)
+        return adjList
+
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        adjList = self.buildAdjacencyList(numCourses, prerequisites)
+        visited = set()
+
+        def hascycle(c,stack):
+            if c in visited:
+                if c in stack:
+                    return True
+                return False
+
+            visited.add(c)
+            stack.append(c)
+
+            for i in adjList[c]:
+                if hascycle(i,stack):
+                    return True
+            
+            stack.pop()
+            return False
+
+        for v in range(numCourses):
+            if hascycle(v,[]):
+                return False
+        return True
+                
+        
